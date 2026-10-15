@@ -127,6 +127,9 @@ Yamayı kaldırmak ve Grok Bot'u tamamen ilk günkü orijinal haline döndürmek
 ---
 
 ### 📝 Changelog / Güncelleme Geçmişi
+* **v1.0.7 (15.10.2026):**
+  - Resmi Grok Bot 15 Ekim güncellemesi (43.8 MB) ile test edildi ve tam uyumluluk doğrulandı.
+  - Güncellenmiş JavaScript çekirdeğindeki yeni AST değişken düzenleri başarıyla desteklendi.
 * **v1.0.6 (12.10.2026):**
   - Resmi Grok Bot 12 Ekim güncellemesi (42.8 MB) ile test edildi ve tam uyumluluk doğrulandı.
   - Güncellenmiş JavaScript çekirdeğindeki yeni AST değişken düzenleri başarıyla desteklendi.
