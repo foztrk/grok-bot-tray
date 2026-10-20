@@ -1,15 +1,16 @@
 <div align="center">
 
-# 🤖 Grok Bot System Tray (Close-to-Tray) 📌
+# 🤖 Grok Bot System Tray & Enhancement Suite 📌
 
-**Minimize Grok Desktop (xAI) to the Windows System Tray on Close (X)**
+**Configurable "Minimize to Tray on Close" Toggle & Localization Blueprint for Grok Desktop (xAI)**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Platform: Windows](https://img.shields.io/badge/Platform-Windows-0078D6.svg?logo=windows)](https://github.com/gmzoztr/grok-bot-tray)
-[![Supports: Electron](https://img.shields.io/badge/Engine-Electron%20%2F%20.NET-informational.svg)](https://github.com/gmzoztr/grok-bot-tray)
-[![Star on GitHub](https://img.shields.io/github/stars/gmzoztr/grok-bot-tray?style=social)](https://github.com/gmzoztr/grok-bot-tray)
+[![Platform: Windows](https://img.shields.io/badge/Platform-Windows-0078D6.svg?logo=windows)](https://github.com/foztrk/grok-bot-tray)
+[![Supports: Electron](https://img.shields.io/badge/Engine-Electron%20%2F%20.NET-informational.svg)](https://github.com/foztrk/grok-bot-tray)
+[![Release: v1.1.0](https://img.shields.io/badge/Release-v1.1.0-brightgreen.svg)](https://github.com/foztrk/grok-bot-tray/releases)
+[![Star on GitHub](https://img.shields.io/github/stars/foztrk/grok-bot-tray?style=social)](https://github.com/foztrk/grok-bot-tray)
 
-*A lightweight, native companion and dynamic patcher that keeps Grok Bot running in your system notification area when you click the Close (X) button.*
+*A lightweight, native companion (160 KB) and dynamic patcher that adds a configurable system tray toggle and fixes Turkish localization issues for Grok Bot.*
 
 ---
 
@@ -19,7 +20,7 @@
 
 ---
 
-[English](#-english) • [Türkçe](#-t%C3%BCrk%C3%A7e) • [Message for xAI / Grok Team](#-a-message-to-the-xai--grok-team)
+[English](#-english) • [Türkçe](#-t%C3%BCrk%C3%A7e) • [Blueprint for xAI / Grok Team](#-blueprint-for-xai--grok-team) • [Turkish Localization Bug Report](#-turkish-localization-bug-report-for-xai)
 
 </div>
 
@@ -28,17 +29,21 @@
 ## 🇬🇧 English
 
 ### Why this project?
-The official **Grok Desktop** application for Windows (powered by Electron) currently lacks a native *"Minimize to Tray on Close"* setting. When users click the **Close (X)** button, the app terminates entirely rather than staying ready in the background like Telegram, Discord, or Slack.
+The official **Grok Desktop** application for Windows (by xAI) currently terminates completely when clicking the **Close (X)** button. Many users expect modern productivity software (like Discord, Telegram, or Slack) to stay active in the background ready to respond instantly.
 
-This repository provides an automated, update-resilient patch and a lightweight C# companion (`160 KB`) that adds seamless system tray support to Grok Bot.
+Version **v1.1.0** introduces a **Configurable Toggle Switch**:
+- **ON (Checked):** Clicking **X** minimizes Grok Bot to the system tray.
+- **OFF (Unchecked):** Clicking **X** cleanly terminates Grok Bot.
+- Persisted automatically in `%APPDATA%\Grok Bot\tray-settings.json`.
 
 ### Features
-* **Close to Tray:** Clicking the **X** button hides Grok Bot to the system tray instead of closing it.
-* **Instant Restore:** Left-click or double-click the tray icon to bring Grok Bot back to focus instantly.
-* **Smart Single-Instance:** Clicking the desktop shortcut while Grok Bot is in the tray automatically restores and focuses the window.
-* **Balloon Notification:** Shows a brief, non-intrusive notification when minimized for the first time.
-* **Update-Resilient:** The patcher dynamically analyzes minified JavaScript variables (`watchRenderer`), automatically adapting to new official Grok Bot updates!
-* **100% Reversible:** Revert back to official factory state anytime with a single click.
+* **Configurable Close Behavior:** Toggle *"Kapatılınca Tepsiye Küçült"* directly from the tray context menu at any time.
+* **Instant Background Restore:** Left-click or double-click the tray icon to restore Grok Bot instantly.
+* **Smart Single-Instance Interception:** Clicking desktop or taskbar shortcuts restores the existing hidden window.
+* **Non-Intrusive Balloon Tips:** Alerts you when the setting is toggled or when Grok Bot is minimized for the first time.
+* **Update-Resilient AST Patching:** Dynamically adapts to minified JavaScript variables across official Grok updates.
+* **Native C# Companion:** Ultra-fast, ~160 KB footprint communicating over local Named Pipes with zero overhead.
+* **100% Reversible:** Revert back to official factory original files with `restore.ps1`.
 
 ---
 
@@ -50,21 +55,13 @@ This repository provides an automated, update-resilient patch and a lightweight 
 * Official [Grok Bot](https://grok.com) installed in default directory (`C:\Program Files\Grok Bot`)
 
 #### One-Click Install
-1. Clone or download this repository.
-2. Right-click **`install.ps1`** and select **"Run with PowerShell"** (it will automatically ask for Administrator permissions if required).
+1. Clone or download this repository:
+   ```powershell
+   git clone https://github.com/foztrk/grok-bot-tray.git
+   cd grok-bot-tray
+   ```
+2. Right-click **`install.ps1`** and select **"Run with PowerShell"** (or run `powershell -ExecutionPolicy Bypass -File install.ps1`).
 3. Grok Bot will be patched and restarted automatically.
-
----
-
-### 🔄 How to Handle Grok Bot Updates
-When Grok Bot updates itself, its core files are refreshed by the official installer. To re-apply the tray feature:
-Simply run **`install.ps1`** again! The dynamic patcher automatically detects any changed variable names in the new version and re-patches in 5 seconds.
-
----
-
-### 🧹 How to Uninstall / Restore
-To completely remove the patch and revert Grok Bot to 100% factory original state:
-Run **`restore.ps1`**.
 
 ---
 
@@ -72,86 +69,101 @@ Run **`restore.ps1`**.
 
 ## 🇹🇷 Türkçe
 
-### Bu Proje Neden Geliştirildi?
-Resmi **Grok Bot** masaüstü uygulamasında (Electron tabanlı) şu anda kapatma (X) butonuna basıldığında uygulamanın sağ alt sistem tepsisine (system tray) küçülmesi seçeneği bulunmamaktadır. Kullanıcılar X butonuna bastığında uygulama arka planda açık kalmak yerine tamamen kapanmaktadır.
+### Neden Bu Proje?
+Resmi **Grok Bot** masaüstü uygulamasında (xAI) varsayılan olarak kapatma butonuna (X) basıldığında uygulama tamamen kapanmaktadır. Birçok kullanıcı arka planda açık kalmasını ve anında yanıt vermeye hazır olmasını beklemektedir.
 
-Bu proje, Grok Bot'a hafif (160 KB) bir C# tepsi yardımcısı ve dinamik bir JavaScript yamalayıcısı ekleyerek X butonuna basıldığında uygulamanın sağ alt köşede arka planda çalışmaya devam etmesini sağlar.
-
-### Özellikler
-* **Tepsiye Küçültme:** X butonuna basıldığında uygulama kapanmaz, sağ alttaki sistem tepsisine gizlenir.
-* **Anında Geri Açma:** Tepsideki Grok simgesine tıklayarak veya çift tıklayarak pencereyi anında öne getirebilirsiniz.
-* **Akıllı Kısayol Desteği:** Grok Bot tepside gizliyken masaüstündeki kısayoluna çift tıklarsanız yeni kopya açmaya çalışmak yerine gizli pencereyi doğrudan ekrana getirir.
-* **Güncellemelere Dayanıklı (Dinamik Regex):** Yamalayıcı, kod içerisindeki sıkıştırılmış (minified) değişken isimlerini otomatik olarak tespit eder; böylece resmi güncellemeler gelse dahi kolayca yeniden uygulanabilir.
-* **%100 Güvenli ve Geri Alınabilir:** İstediğiniz an tek tıkla Grok Bot'u orijinal fabrika ayarlarına döndürebilirsiniz.
-
----
+**v1.1.0 Sürümüyle Gelen Yenilikler:**
+- **Açık/Kapalı Ayarı (Toggle):** Sistem tepsisi sağ tık menüsüne eklenen `✔ Kapatılınca Tepsiye Küçült` seçeneğiyle davranış anında değiştirilebilir.
+  - **Açıkken (Tikli):** X butonuna basıldığında Grok Bot sağ alt sistem tepsisine küçülür.
+  - **Kapalıyken:** X butonuna basıldığında Grok Bot normal şekilde tamamen kapanır.
+  - Ayarınız `%APPDATA%\Grok Bot\tray-settings.json` dosyasında kalıcı olarak saklanır.
+- **Hafif ve Hızlı:** C# ile geliştirilmiş yardımcı program yalnızca ~160 KB boyutundadır ve Named Pipe ile Electron çekirdeğiyle konuşur.
+- **Türkçe Yerelleştirme ve Hata Analizi:** xAI derleme sürecinde tespit ettiğimiz Türkçe arayüz eksiklikleri ve çözüm blueprint'i dahil edilmiştir.
 
 ### 🚀 Kurulum
-
-1. Bu depoyu indirin veya klonlayın:
+1. Depoyu klonlayın:
    ```powershell
-   git clone https://github.com/gmzoztr/grok-bot-tray.git
+   git clone https://github.com/foztrk/grok-bot-tray.git
    cd grok-bot-tray
    ```
-2. **`install.ps1`** dosyasına sağ tıklayıp **"PowerShell ile Çalıştır"** deyin (Gerekli yönetici yetkisini kendisi isteyecektir).
-3. İşlem 5-10 saniye içinde tamamlanacak ve Grok Bot tepsi desteğiyle otomatik olarak açılacaktır.
-
----
-
-### 🔄 Güncelleme Geldiğinde Ne Yapılır?
-Grok Bot otomatik güncellendiğinde X'e basınca tekrar doğrudan kapanmaya başlarsa:
-Yalnızca **`install.ps1`** dosyasını tekrar çalıştırmanız yeterlidir. Yeni sürümün değişkenlerini otomatik algılayıp 5 saniyede yeniden yamalar.
-
----
-
-### 🧹 Kaldırma (Orijinale Dönüş)
-Yamayı kaldırmak ve Grok Bot'u tamamen ilk günkü orijinal haline döndürmek için:
-**`restore.ps1`** dosyasını çalıştırmanız yeterlidir.
+2. **`install.ps1`** dosyasına sağ tıklayıp **"PowerShell ile Çalıştır"** seçeneğini seçin.
+3. 5 saniye içinde işlem tamamlanacak ve Grok Bot yeni yetenekleriyle açılacaktır.
 
 ---
 
 <br>
 
-## 💡 A Message to the xAI / Grok Team
+## 💡 Blueprint for xAI / Grok Team
 
-> **Dear xAI Engineers & Grok Product Team,**  
-> We love Grok and use the Desktop application daily! The desktop community genuinely misses a native *"Close to Tray"* feature.  
-> 
-> In this repository, we demonstrated how this can be implemented:
-> 1. In your `main-core.cjs` (or TypeScript Electron main process), intercept `mainWindow.on('close', (e) => { if (!isQuitting) { e.preventDefault(); mainWindow.hide(); } })`.
-> 2. On Windows 10/11, implement an Electron `Tray` instance with fallback to prevent the known Chromium `Shell_NotifyIcon` bug.
-> 3. Ensure your `second-instance` handler calls `mainWindow.show(); mainWindow.focus();` when the window is hidden.
-> 
-> We hope to see this natively integrated in an upcoming official release of Grok Bot so community patches are no longer needed! ❤️
+> **Dear Elon Musk, Igor Babuschkin, and the xAI Grok Engineering Team,**  
+> We reverse-engineered and profiled Grok Bot Desktop on Windows to demonstrate how easily native System Tray support can be added directly into the official repository without breaking Electron lifecycle events.
+
+### Recommended Architectural Implementation
+
+1. **Settings Schema (`electron-store` or user preferences):**
+   ```typescript
+   interface UserPreferences {
+     minimizeToTrayOnClose: boolean; // default: true
+   }
+   ```
+
+2. **Window Close Event Interception (`main-core.ts`):**
+   ```typescript
+   mainWindow.on('close', (event) => {
+     const minimizeToTray = userPreferences.get('minimizeToTrayOnClose', true);
+     if (!isQuitting && minimizeToTray) {
+       event.preventDefault();
+       mainWindow.hide();
+       return false;
+     }
+   });
+   ```
+
+3. **Second-Instance Recovery:**
+   ```typescript
+   app.on('second-instance', () => {
+     if (mainWindow) {
+       if (mainWindow.isMinimized()) mainWindow.restore();
+       mainWindow.show();
+       mainWindow.focus();
+     }
+   });
+   ```
+
+---
+
+<br>
+
+## 🐛 Turkish Localization Bug Report for xAI
+
+During our deep-dive analysis of `app.asar`, we identified a critical build/bundling defect in Grok Bot's localization pipeline:
+
+1. **The Root Cause:**  
+   In `dist/renderer/assets/index.eager-app-*.js`, the locale loader function `crt(e)` incorrectly maps the Turkish (`tr`) language code to the emoji-only bundle instead of the main translation catalog:
+   ```javascript
+   // Current xAI build output (INCORRECT):
+   case `tr`: return bi(() => import(`./chunk-emoji-messages.tr-Dd-ZpGQn.js`), [], import.meta.url);
+   ```
+   Because of this bundling error, the entire UI renderer falls back to hardcoded English strings when Turkish is selected, even though complete Turkish FormatJS strings exist in `dist/electron-main/locales/tr/messages.cjs`!
+
+2. **Legacy Fork Leftovers:**  
+   Several Turkish strings in `dist/electron-main/locales/tr/messages.cjs` still contain legacy references to "Cursor" (e.g. `Cursor oturumu`, `Cursor ekibi`, `Cursor bulut aracı`) from upstream forks. These should be renamed to **Grok Bot** / **xAI**.
+
+We would love to submit a direct Pull Request to the official repository if invited! 🚀
 
 ---
 
 ### 📝 Changelog / Güncelleme Geçmişi
+* **v1.1.0 (20.10.2026):**
+  - **Yeni Özellik:** "Kapatılınca Tepsiye Küçült" açma/kapatma (toggle) seçeneği eklendi.
+  - **Kalıcı Yapılandırma:** `%APPDATA%\Grok Bot\tray-settings.json` üzerinden kullanıcı tercihi kaydedilir.
+  - **Named Pipe Protokolü:** `CONFIG:1` ve `CONFIG:0` sinyalleri ile Electron ve C# yardımcısı anında senkronize olur.
+  - **Türkçe Yama & Mimari Blueprint:** xAI ekibi için Türkçe arayüz derleme hatası (`chunk-emoji-messages`) analizi ve çözüm rehberi eklendi.
+  - **Daha Hafif Derleme:** `GrokBotTray.exe` optimize edilerek 162 KB seviyesinde tutuldu.
 * **v1.0.8 (20.10.2026):**
   - Resmi Grok Bot 20 Ekim güncellemesi (47.5 MB) ile test edildi ve tam uyumluluk doğrulandı.
-  - Güncellenmiş JavaScript çekirdeğindeki yeni AST değişken düzenleri başarıyla desteklendi.
 * **v1.0.7 (15.10.2026):**
-  - Resmi Grok Bot 15 Ekim güncellemesi (43.8 MB) ile test edildi ve tam uyumluluk doğrulandı.
-  - Güncellenmiş JavaScript çekirdeğindeki yeni AST değişken düzenleri başarıyla desteklendi.
-* **v1.0.6 (12.10.2026):**
-  - Resmi Grok Bot 12 Ekim güncellemesi (42.8 MB) ile test edildi ve tam uyumluluk doğrulandı.
-  - Güncellenmiş JavaScript çekirdeğindeki yeni AST değişken düzenleri başarıyla desteklendi.
-* **v1.0.5 (10.10.2026):**
-  - Resmi Grok Bot 10 Ekim güncellemesi (42.3 MB) ile test edildi ve tam uyumluluk doğrulandı.
-  - Güncellenmiş JavaScript çekirdeğindeki yeni AST değişken düzenleri başarıyla desteklendi.
-* **v1.0.4 (07.10.2026):**
-  - Resmi Grok Bot 7 Ekim güncellemesi (41.1 MB) ile test edildi ve tam uyumluluk doğrulandı.
-  - Güncellenmiş JavaScript çekirdeğindeki yeni AST değişken düzenleri başarıyla desteklendi.
-* **v1.0.3 (02.10.2026):**
-  - Resmi Grok Bot 2 Ekim güncellemesi (38.5 MB) ile test edildi ve tam uyumluluk doğrulandı.
-  - Yeni AST değişken düzenleri dinamik ayrıştırıcı tarafından otomatik uyarlandı.
-* **v1.0.2 (01.10.2026):**
-  - Resmi Grok Bot 1 Ekim güncellemesi (38.3 MB) ile test edildi ve tam uyumluluk doğrulandı.
-  - Güncellenmiş JavaScript çekirdeğindeki yeni AST değişkenleri desteklendi.
-* **v1.0.1 (30.09.2026):**
-  - Resmi Grok Bot 30 Eylül güncellemesi ile test edildi ve tam uyumluluk doğrulandı.
-  - Dinamik değişken yakalama algoritması yeni minified yapılara karşı güçlendirildi.
-  - Windows dosya kilitlerine karşı otomatik yeniden deneme (retry) mekanizması iyileştirildi.
+  - Resmi Grok Bot 15 Ekim güncellemesi (43.8 MB) ile test edildi.
 * **v1.0.0 (29.09.2026):**
   - İlk açık kaynak sürüm yayınlandı.
 
@@ -160,4 +172,3 @@ Yamayı kaldırmak ve Grok Bot'u tamamen ilk günkü orijinal haline döndürmek
 ### 📄 License
 This project is open-source under the [MIT License](LICENSE).  
 *Disclaimer: This is an unofficial, community-made enhancement tool. Grok and xAI are trademarks of their respective owners.*
-

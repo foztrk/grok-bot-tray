@@ -29,6 +29,7 @@ class GrokBotTray
     static int parentPid = -1;
     static string pipeName = "grokbot_tray_pipe";
     static bool isExiting = false;
+    static bool minimizeToTrayOnClose = true;
 
     [STAThread]
     static void Main(string[] args)
@@ -44,6 +45,9 @@ class GrokBotTray
 
         uiContext = SynchronizationContext.Current ?? new WindowsFormsSynchronizationContext();
 
+        // Yapılandırmayı yükle
+        minimizeToTrayOnClose = LoadConfig();
+
         trayIcon = new NotifyIcon();
         trayIcon.Text = "Grok Bot";
 
@@ -55,6 +59,34 @@ class GrokBotTray
         var itemShow = new ToolStripMenuItem("Grok Bot'u Göster", null, (s, e) => SendCommand("SHOW"));
         itemShow.Font = new Font(itemShow.Font, FontStyle.Bold);
         menu.Items.Add(itemShow);
+        menu.Items.Add(new ToolStripSeparator());
+
+        // Sistem Tepsisinde Küçült Açık/Kapalı Ayarı
+        var itemToggle = new ToolStripMenuItem("Kapatılınca Tepsiye Küçült")
+        {
+            CheckOnClick = true,
+            Checked = minimizeToTrayOnClose
+        };
+        itemToggle.CheckedChanged += (s, e) => {
+            minimizeToTrayOnClose = itemToggle.Checked;
+            SaveConfig(minimizeToTrayOnClose);
+            SendCommand(minimizeToTrayOnClose ? "CONFIG:1" : "CONFIG:0");
+
+            if (minimizeToTrayOnClose)
+            {
+                trayIcon?.ShowBalloonTip(2500, "Grok Bot",
+                    "Sistem Tepsisine Küçültme Açık: Çarpı (X) butonuna bastığınızda Grok Bot tepsiye küçülecektir.",
+                    ToolTipIcon.Info);
+            }
+            else
+            {
+                trayIcon?.ShowBalloonTip(2500, "Grok Bot",
+                    "Sistem Tepsisine Küçültme Kapalı: Çarpı (X) butonuna bastığınızda Grok Bot tamamen kapanacaktır.",
+                    ToolTipIcon.Warning);
+            }
+        };
+        menu.Items.Add(itemToggle);
+
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add(new ToolStripMenuItem("Çıkış", null, (s, e) => {
             SendCommand("QUIT");
@@ -83,10 +115,57 @@ class GrokBotTray
             });
         }
 
+        // Başlangıçta mevcut ayarı Electron'a bildir (1 saniye gecikmeyle)
+        Task.Run(async () => {
+            await Task.Delay(1200);
+            SendCommand(minimizeToTrayOnClose ? "CONFIG:1" : "CONFIG:0");
+        });
+
         // Balon bildirimi pipe dinleyicisi (ilk küçültmede bildirim göstermek için)
         Task.Run(ListenBalloonNotification);
 
         Application.Run();
+    }
+
+    static string GetConfigFilePath()
+    {
+        string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        string configDir = Path.Combine(appData, "Grok Bot");
+        if (!Directory.Exists(configDir))
+        {
+            try { Directory.CreateDirectory(configDir); } catch { }
+        }
+        return Path.Combine(configDir, "tray-settings.json");
+    }
+
+    static bool LoadConfig()
+    {
+        try
+        {
+            string file = GetConfigFilePath();
+            if (File.Exists(file))
+            {
+                string text = File.ReadAllText(file);
+                if (text.Contains("\"minimizeToTrayOnClose\": false", StringComparison.OrdinalIgnoreCase) ||
+                    text.Contains("\"minimizeToTrayOnClose\":false", StringComparison.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+            }
+        }
+        catch { }
+        return true;
+    }
+
+    static void SaveConfig(bool val)
+    {
+        try
+        {
+            string file = GetConfigFilePath();
+            string json = "{\n  \"minimizeToTrayOnClose\": " + (val ? "true" : "false") + "\n}\n";
+            File.WriteAllText(file, json, Encoding.UTF8);
+        }
+        catch { }
     }
 
     static void LoadTrayIcon()

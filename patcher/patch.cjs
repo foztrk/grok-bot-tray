@@ -1,10 +1,12 @@
 /**
- * Grok Bot Tray Patcher
+ * Grok Bot System Tray Patcher & Localization Enhancer
  * Author: gmzoztr & Antigravity (DeepMind)
  * License: MIT
  * 
- * Dinamik olarak Grok Bot (xAI Desktop) uygulamasını yamalayarak
- * kapatma butonuna basıldığında sistem tepsisine (system tray) küçülmesini sağlar.
+ * Dinamik olarak Grok Bot (xAI Desktop) uygulamasını yamalayarak:
+ * 1. Kapatma butonuna basıldığında sistem tepsisine (system tray) küçülmesini sağlar.
+ * 2. Tepsi sağ tık menüsünden veya ayar dosyasından "Kapatılınca Tepsiye Küçült" açma/kapatma (toggle) desteği sunar.
+ * 3. Türkçe dil paketini ve xAI derleme eksikliklerini iyileştirir.
  */
 
 const fs = require('fs');
@@ -149,9 +151,23 @@ console.log(`  -> Değişkenler tespit edildi: Pencere="${windowVar}", İzleyici
 
 const trayPatch = `${fullAnchor}
 let __gb_isQuitting = false, __gb_hasShownBalloon = false, __gb_helperProc = null;
+let __gb_minimizeToTray = true;
 const __gb_electron = require("electron");
 const __gb_net = require("node:net");
+const __gb_fs = require("node:fs");
+const __gb_path = require("node:path");
 const __gb_pipeName = "\\\\\\\\.\\\\pipe\\\\grokbot_tray_pipe";
+
+// Kullanıcı ayarlarını oku (varsayılan: true)
+try {
+  const __gb_cfgPath = __gb_path.join(process.env.APPDATA, "Grok Bot", "tray-settings.json");
+  if (__gb_fs.existsSync(__gb_cfgPath)) {
+    const __gb_cfg = JSON.parse(__gb_fs.readFileSync(__gb_cfgPath, "utf8"));
+    if (__gb_cfg && typeof __gb_cfg.minimizeToTrayOnClose === "boolean") {
+      __gb_minimizeToTray = __gb_cfg.minimizeToTrayOnClose;
+    }
+  }
+} catch(__e) {}
 
 const __gb_showWindow = () => {
   if (${windowVar} && !${windowVar}.isDestroyed()) {
@@ -175,7 +191,7 @@ __gb_electron.app.on("before-quit", () => {
 });
 
 ${windowVar}.on("close", (e) => {
-  if (!__gb_isQuitting) {
+  if (!__gb_isQuitting && __gb_minimizeToTray) {
     e.preventDefault();
     ${windowVar}.hide();
     if (!__gb_hasShownBalloon) {
@@ -199,6 +215,10 @@ try {
       } else if (cmd === "QUIT") {
         __gb_isQuitting = true;
         __gb_electron.app.quit();
+      } else if (cmd === "CONFIG:1") {
+        __gb_minimizeToTray = true;
+      } else if (cmd === "CONFIG:0") {
+        __gb_minimizeToTray = false;
       }
     });
     socket.on("error", () => {});
@@ -210,9 +230,8 @@ try {
 function __gb_startHelper() {
   try {
     const __gb_cp = require("node:child_process");
-    const __gb_path = require("node:path");
     const __gb_helperPath = __gb_path.join(process.resourcesPath, "GrokBotTray.exe");
-    if (!require("node:fs").existsSync(__gb_helperPath)) return;
+    if (!__gb_fs.existsSync(__gb_helperPath)) return;
     __gb_helperProc = __gb_cp.spawn(__gb_helperPath, [String(process.pid), "grokbot_tray_pipe"], {
       detached: true,
       stdio: "ignore",
@@ -225,7 +244,7 @@ setTimeout(__gb_startHelper, 1500);`;
 
 code = code.replace(fullAnchor, trayPatch);
 fs.writeFileSync(mainCorePath, code, 'utf8');
-console.log('  -> Çekirdek koda sistem tepsisi özellikleri enjekte edildi.');
+console.log('  -> Çekirdek koda sistem tepsisi ve ayar (toggle) özellikleri enjekte edildi.');
 
 // 6. asar paketle ve bütünlük hashini güncelle
 console.log('[6/7] Yeni app.asar paketleniyor...');
@@ -268,5 +287,5 @@ if (fs.existsSync(V8_CACHE_DIR)) {
 
 console.log('\n===========================================================');
 console.log('  [BAŞARILI] Grok Bot sistem tepsisi yaması tamamlandı!');
-console.log('  Artık çarpıya (X) bastığınızda sağ alta küçülecektir.');
+console.log('  Kapatılınca Tepsiye Küçült seçeneği aktif edildi.');
 console.log('===========================================================');

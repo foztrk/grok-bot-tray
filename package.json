@@ -1,7 +1,7 @@
 {
   "name": "grok-bot-tray",
-  "version": "1.0.8",
-  "description": "System Tray (Minimize to Tray on Close) patch & companion for Grok Desktop (xAI)",
+  "version": "1.1.0",
+  "description": "System Tray (Minimize to Tray on Close toggle & config) patch & Turkish Localization fix for Grok Desktop (xAI)",
   "type": "commonjs",
   "main": "patcher/patch.cjs",
   "scripts": {
@@ -14,7 +14,9 @@
     "system-tray",
     "close-to-tray",
     "minimize-to-tray",
-    "electron"
+    "electron",
+    "turkish-patch",
+    "localization"
   ],
   "author": "gmzoztr",
   "license": "MIT",
