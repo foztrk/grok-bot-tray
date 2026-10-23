@@ -7,7 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platform: Windows](https://img.shields.io/badge/Platform-Windows-0078D6.svg?logo=windows)](https://github.com/foztrk/grok-bot-tray)
 [![Supports: Electron](https://img.shields.io/badge/Engine-Electron%20%2F%20.NET-informational.svg)](https://github.com/foztrk/grok-bot-tray)
-[![Release: v1.1.3](https://img.shields.io/badge/Release-v1.1.3-brightgreen.svg)](https://github.com/foztrk/grok-bot-tray/releases)
+[![Release: v1.1.4](https://img.shields.io/badge/Release-v1.1.4-brightgreen.svg)](https://github.com/foztrk/grok-bot-tray/releases)
 [![Star on GitHub](https://img.shields.io/github/stars/foztrk/grok-bot-tray?style=social)](https://github.com/foztrk/grok-bot-tray)
 
 *A lightweight, native companion (160 KB) and dynamic patcher that adds a configurable system tray toggle and fixes Turkish localization issues for Grok Bot.*
@@ -154,6 +154,10 @@ We would love to submit a direct Pull Request to the official repository if invi
 ---
 
 ### 📝 Changelog / Güncelleme Geçmişi
+* **v1.1.4 (23.10.2026):**
+  - Resmi Grok Bot 23 Ekim güncellemesi (50.6 MB) ile test edildi ve tam uyumluluk doğrulandı.
+  - Güncellenen yeni JavaScript çekirdeği otomatik olarak analiz edilip yamalandı.
+  - "Kapatılınca Tepsiye Küçült" anahtarı ve sistem tepsisi arka plan hizmeti kesintisiz çalışmaya devam ediyor.
 * **v1.1.3 (22.10.2026 - Gece):**
   - Resmi Grok Bot 22 Ekim gece güncellemesi (50.3 MB) ile test edildi ve tam uyumluluk doğrulandı.
   - Güncellenen yeni JavaScript çekirdeği otomatik olarak analiz edilip yamalandı.
